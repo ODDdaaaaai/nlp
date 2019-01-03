@@ -1,13 +1,16 @@
 # coding=utf-8
+import codecs
+import json
 import pickle
 
 import got
 
 from model.Event import Event
+from model.Tweet import Tweet
 
 # Search criteria
 TOP_TWEETS = True
-MAX_TWEETS = 40
+MAX_TWEETS = 10
 WITHIN = '1000mi'
 
 # Events to search for
@@ -73,11 +76,11 @@ SAD_EVENTS = [
 
 # All events
 EVENTS = [
-    SAD_EVENTS
+    HAPPY_EVENTS
 ]
 
 # List of tweets
-tweets = []
+fetched_tweets = []
 
 # Get tweets
 for category in EVENTS:
@@ -86,42 +89,28 @@ for category in EVENTS:
             for near in event.near:
                 tweetCriteria = got.manager.TweetCriteria().setTopTweets(TOP_TWEETS).setSince(event.since).setUntil(
                     event.until).setNear(near).setWithin(WITHIN).setQuerySearch(search_query).setMaxTweets(MAX_TWEETS)
-                tweets += got.manager.TweetManager.getTweets(tweetCriteria)
+                fetched_tweets += got.manager.TweetManager.getTweets(tweetCriteria)
 
-# Save tweets
-pickle.dump(tweets, open('tweets.pckl', 'wb'))
+# Save fetched tweets
+pickle.dump(fetched_tweets, open('data/fetched_data.pckl', 'wb'))
+
+# Create list of custom model
+tweets = []
+
+for tweet in fetched_tweets:
+    tweets.append(Tweet(tweet.text, tweet.hashtags, [], []))
+
+# Save custom tweets
+pickle.dump(tweets, open('data/data.pckl', 'wb'))
+
+# Save tweets as JSON
+with codecs.open('data/data.json', 'w', encoding='utf-8') as outfile:
+    data = json.dump([tweet.__dict__ for tweet in tweets], outfile, indent=4, ensure_ascii=False)
+
+outfile.close()
 
 # Print fetched tweets
 count = 1
 for tweet in tweets:
-    print(str(count) + tweet.text.encode('utf-8'))
+    print(str(count) + tweet.text)
     count += 1
-
-# tweets_text = []
-# tweets_hashtags = []
-#
-# for searchQuery in QUERIES:
-#     tweetCriteria = got.manager.TweetCriteria().setTopTweets(TOP_TWEETS).setQuerySearch(searchQuery).setSince(SINCE).setUntil(
-#         UNTIL).setNear(NEAR).setMaxTweets(MAX_TWEETS)
-#     tweets += got.manager.TweetManager.getTweets(tweetCriteria)
-#
-# file_tweets_text = open('data\\tweets_text.txt', 'wb')
-# file_tweets_hashtags = open('data\\tweets_hashtags.txt', 'wb')
-# file_tweets_stats = open('data\\tweets_stats.txt', 'wb')
-#
-# for tweet in tweets:
-#     tweet_text = tweet.text.encode('utf-8')
-#     file_tweets_text.write(tweet_text)
-#     file_tweets_text.write("\n")
-#     tweets_text.append(tweet_text)
-#     tweet_hashtags = tweet.hashtags.encode('utf-8')
-#     file_tweets_hashtags.write(tweet_hashtags)
-#     file_tweets_hashtags.write("\n")
-#     tweets_hashtags.append(tweet_hashtags)
-#
-# file_tweets_stats.write("Total tweets = " + str(len(tweets)))
-# file_tweets_stats.write("Total hashtags = " + str(len(tweets_hashtags)))
-#
-# file_tweets_text.close()
-# file_tweets_hashtags.close()
-# file_tweets_stats.close()
