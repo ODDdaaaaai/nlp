@@ -1,11 +1,13 @@
 # coding=utf-8
+import codecs
 import re
 
 from nltk import word_tokenize
+from nltk.corpus import stopwords
 
 
 def clean(text):
-    # Kepp only arabic characters
+    # Keep only arabic characters
     text = re.sub(u'[^\u0621-\u064A]', u' ', text)
 
     # Change ة to ه
@@ -18,13 +20,22 @@ def clean(text):
     text = re.sub(r'(.)\1+', r'\1', text)
 
     # Remove extra spaces
-    text = re.sub(u'(\s)+', ' ', text)
+    text = re.sub(u'(\s)+', u' ', text)
 
     return text
 
 
+def remove_stop_words(tokens):
+    stop_words = stopwords.words('arabic')
+    with codecs.open('stop_words.txt', 'r', encoding='utf-8') as stop_words_file:
+        for line in stop_words_file:
+            stop_words.append(line.split('\r')[0])
+    return [token for token in tokens if token not in stop_words]
+
+
 def tokenize(text):
-    return word_tokenize(text, 'arabic')
+    return word_tokenize(text)
 
 
-print(tokenize(clean(u'ان أحب أكل البطاط المقلية')))
+print([word for word in remove_stop_words(tokenize(clean(u'ان احب امب بل  بلب')))])
+print(clean(u'ان احب امب بل  بلب'))
