@@ -37,5 +37,9 @@ def tokenize(text):
     return word_tokenize(text)
 
 
-print([word for word in remove_stop_words(tokenize(clean(u'ان احب امب بل  بلب')))])
-print(clean(u'ان احب امب بل  بلب'))
+def remove_duplicates(sentences):
+    lines_set = set()
+    for sentence in sentences:
+        if sentence not in lines_set:
+            lines_set.add(sentence)
+    return list(lines_set)
