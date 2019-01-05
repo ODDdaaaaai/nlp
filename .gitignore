@@ -1,3 +1,4 @@
 .idea
-fetched_part_data
-fetched_data
+resources/fetched_data
+resources/fetched_part_data
+resources/report/.ipynb_checkpoints
