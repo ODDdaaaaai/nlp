@@ -4,6 +4,8 @@ import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.linear_model import SGDClassifier
+from sklearn.metrics import precision_score
+from sklearn.metrics import recall_score
 from sklearn.pipeline import Pipeline
 
 from data.store_data import unpickle_data
@@ -26,9 +28,15 @@ _ = text_clf_svm.fit(X_train, y_train)
 predicted_svm = text_clf_svm.predict(X_test)
 np.mean(predicted_svm == X_test)
 
+precision = precision_score(y_test, predicted_svm, average='macro')
+recall = recall_score(y_test, predicted_svm, average='macro')
+
 for i in range(3):
     print('Review:\t{}\nPredicted label:\t{}\n\n'.format(
         X_test[i][:100].encode('utf-8') + "...", predicted_svm[i][:100])
     )
 
 print('TF-IDF SVM accuracy ' + str(np.mean(predicted_svm == y_test) * 100) + '%')
+
+print('Precision score: {0:0.2f}'.format(precision))
+print('Recall score: {0:0.2f}'.format(recall))

@@ -3,6 +3,8 @@ import random
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.metrics import precision_score
+from sklearn.metrics import recall_score
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
 
@@ -34,9 +36,15 @@ text_clf = text_clf.fit(X_train, y_train)
 
 predicted = text_clf.predict(X_test)
 
+precision = precision_score(y_test, predicted, average='macro')
+recall = recall_score(y_test, y_test, average='macro')
+
 for i in range(3):
     print('Review:\t{}\nPredicted label:\t{}\n\n'.format(
         X_test[i][:100].encode('utf-8') + "...", predicted[i][:100])
     )
 
 print('TF-IDF Naive Bayes accuracy = ' + str(np.mean(predicted == y_test) * 100) + '%')
+
+print('Precision score: {0:0.2f}'.format(precision))
+print('Recall score: {0:0.2f}'.format(recall))

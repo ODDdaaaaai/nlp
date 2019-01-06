@@ -1,6 +1,8 @@
 import random
 
 import nltk
+from sklearn.metrics import precision_score
+from sklearn.metrics import recall_score
 
 from classify.classify import accuracy
 from classify.classify import ridge_classifier
@@ -35,9 +37,15 @@ pickle_data(classifier, 'resources/classifiers/tf_idf_ridge.cls')
 test_predicted_labels = classifier.predict(testing_features)
 test_predicted_scores = classifier.decision_function(testing_features)
 
+precision = precision_score(y_test, test_predicted_labels, average='macro')
+recall = recall_score(y_test, test_predicted_labels, average='macro')
+
 for i in range(3):
     print('Review:\t{}\nPredicted label:\t{}\n\n'.format(
         X_test[i][:100].encode('utf-8') + "...", test_predicted_labels[i].encode('utf-8'))
     )
 
 print('Tfidf Accuracy: ' + str(accuracy(y_test, test_predicted_labels) * 100) + '%')
+
+print('Precision score: {0:0.2f}'.format(precision))
+print('Recall score: {0:0.2f}'.format(recall))

@@ -2,6 +2,7 @@ import random
 
 import nltk
 from scipy import sparse as sp_sparse
+from sklearn.metrics import average_precision_score
 
 from classify.classify import accuracy
 from classify.classify import ridge_classifier
@@ -41,6 +42,8 @@ testing_features = sp_sparse.vstack(
      X_test])
 
 classifier = ridge_classifier(training_features, y_train)
+y_score = classifier.decision_function(X_test)
+average_precision = average_precision_score(y_test, y_score)
 
 pickle_data(classifier, 'resources/classifiers/bag_ridge.cls')
 
@@ -53,3 +56,6 @@ for i in range(3):
     )
 
 print('Bag-of-words Accuracy: ' + str(accuracy(y_test, test_predicted_labels) * 100) + '%')
+
+print('Average precision-recall score: {0:0.2f}'.format(
+    average_precision))
