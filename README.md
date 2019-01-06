@@ -1,6 +1,6 @@
-**Natural Language Processing, University of Damascus, Final project.**
+# Natural Language Processing, University of Damascus, Final project.
 
-The purpose of this project is to extract feelings from text,
+## The purpose of this project is to extract feelings from text,
 
 The real work lays in collecting and processing data, we successfully collected 149,372 tweets written in arabic using the Get Old Tweets library by Jefferson Henrique.
 
