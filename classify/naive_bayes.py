@@ -11,17 +11,17 @@ from text_proccessing.text_proccessing import tokenize
 
 tweets = unpickle_data('resources/tagged_data/data_tagged_cleaned.pckl')
 
-documents = [([], str)]
+samples = [([], str)]
 for tweet in tweets:
     try:
-        documents.append((remove_stop_words(tokenize(tweet.text)), tweet.feelings[0]))
+        samples.append((remove_stop_words(tokenize(tweet.text)), tweet.feelings[0]))
     except IndexError:
         pass
 
-random.shuffle(documents)
+random.shuffle(samples)
 
 all_words = []
-for sample in documents[:10000]:
+for sample in samples[:10000]:
     words = sample[0]
     for word in words:
         all_words.append(word)
@@ -33,7 +33,7 @@ final_features = []
 for word in most_common_words:
     final_features.append(word[0])
 
-feature_set = [(extract_features(sentence, final_features), tag) for (sentence, tag) in documents[:16000]]
+feature_set = [(extract_features(sentence, final_features), tag) for (sentence, tag) in samples[:16000]]
 train_set, test_set = feature_set[:16000], feature_set[-4000:]
 classifier = nltk.NaiveBayesClassifier.train(train_set)
 

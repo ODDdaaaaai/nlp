@@ -1,4 +1,5 @@
 # coding=utf-8
+import codecs
 import re
 
 from nltk import word_tokenize
@@ -26,9 +27,9 @@ def clean(text):
 
 def remove_stop_words(tokens):
     stop_words = stopwords.words('arabic')
-    # with codecs.open('stop_words.txt', 'r', encoding='utf-8') as stop_words_file:
-    #     for line in stop_words_file:
-    #         stop_words.append(line.split('\r')[0])
+    with codecs.open('stop_words.txt', 'r', encoding='utf-8') as stop_words_file:
+        for line in stop_words_file:
+            stop_words.append(line.split('\r')[0])
     return [token for token in tokens if token not in stop_words]
 
 

@@ -21,8 +21,8 @@ def tf_idf(training_samples, testing_samples):
     return training_features, testing_features, vectorizer.vocabulary_
 
 
-def extract_features(sample, features):
+def extract_features(sample, sample_features):
     features = {}
-    for feature in features:
+    for feature in sample_features:
         features['contains(%s)' % feature] = (feature in sample)
     return features
